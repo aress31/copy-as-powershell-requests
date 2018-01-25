@@ -23,7 +23,7 @@ Requests containing in body parameters of the following types are not yet fully 
 $ git clone https://github.com/AresS31/copy-as-powershell-requests
 $ cd .\copy-as-powershell-requests\
 ```
-3. Create the swurg jarfile:
+3. Create the standalone jar:
 ```shell
 $ gradle fatJar
 ```
