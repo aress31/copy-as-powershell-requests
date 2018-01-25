@@ -24,6 +24,7 @@ public class ExtensionHelpers {
   private boolean hasContentType;
   private boolean hasParamBody;
   private boolean hasParamJson;
+  private boolean hasParamMultipart;
   private boolean hasParamUrl;
   private boolean hasUserAgent;
 
@@ -56,15 +57,35 @@ public class ExtensionHelpers {
     }
 
     if (this.hasParamBody) {
-      stringBuilder.append(" -Body $paramBody");
+      if (!stringBuilder.toString().contains("-Body")) {
+        stringBuilder.append(" -Body $paramBody");
+      } else {
+        stringBuilder.append(", $paramBody");
+      }
     }
 
     if (this.hasParamJson) {
-      stringBuilder.append(" -Body $paramJson");
+      if (!stringBuilder.toString().contains("-Body")) {
+        stringBuilder.append(" -Body $paramJson");
+      } else {
+        stringBuilder.append(", $paramJson");
+      }
     }
 
+//    if (this.hasParamMultipart) {
+//      if (!stringBuilder.toString().contains("-Body")) {
+//        stringBuilder.append(" -Body $paramMultipart");
+//      } else {
+//        stringBuilder.append(", $paramMultipart");
+//      }
+//    }
+
     if (this.hasParamUrl) {
-      stringBuilder.append(" -Body $paramUrl");
+      if (!stringBuilder.toString().contains("-Body")) {
+        stringBuilder.append(" -Body $paramUrl");
+      } else {
+        stringBuilder.append(", $paramUrl");
+      }
     }
 
     return stringBuilder;
@@ -107,9 +128,11 @@ public class ExtensionHelpers {
   private StringBuilder processParameters(List<IParameter> parameters) {
     this.hasParamBody = false;
     this.hasParamJson = false;
+    this.hasParamMultipart = false;
     this.hasParamUrl = false;
     boolean firstParamBody = true;
     boolean firstParamJson = true;
+    boolean firstParamMultipart = true;
     boolean firstParamUrl = true;
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -158,9 +181,22 @@ public class ExtensionHelpers {
                     + "')")
                 .append(System.lineSeparator());
             break;
+          case IParameter.PARAM_MULTIPART_ATTR:
+//            if (firstParamMultipart) {
+//              this.hasParamMultipart = true;
+//              stringBuilder.append(
+//                  "$paramMultipart = [System.Net.Http.MultipartFormDataContent]::new()")
+//                  .append(System.lineSeparator());
+//              firstParamMultipart = false;
+//            }
+//
+//            stringBuilder.append(parameter.getName() + " --- " + parameter.getValue())
+//                .append(System.lineSeparator());
+            break;
           default:
             callbacks
-                .printError("Please open a new issue on the GitHub repository of this extension.");
+                .printError(
+                    "Please raise a new issue on https://github.com/AresS31/copy-as-powershell-requests.");
             break;
         }
       }
