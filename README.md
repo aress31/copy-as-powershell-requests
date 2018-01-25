@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Copy as PowerShell request(s) plugin for the Burp Suite
-Copies selected request(s) as PowerShell request(s) invocation. 
+Copies selected request(s) as [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1). 
 
 ## Project information
 The extension is still in development, feedback and comments are much appreciated.
@@ -37,7 +37,7 @@ In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button a
 - [ ] Support for more additional parameter types.
 
 ## Credits
-[Original inspiration by PortSwigger's python requests extension.](https://github.com/PortSwigger/copy-as-python-requests)
+Original inspiration by [PortSwigger's python requests extension](https://github.com/PortSwigger/copy-as-python-requests).
 
 ## License
 Copyright 2018 Alexandre Teyar
