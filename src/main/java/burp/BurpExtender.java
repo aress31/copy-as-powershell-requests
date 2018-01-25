@@ -1,0 +1,36 @@
+/*
+ * Copyright 2018 Alexandre Teyar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package burp;
+
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+
+public class BurpExtender implements IBurpExtender {
+
+  private final static String EXTENSION_NAME = "Copy as PowerShell request(s)";
+
+  @Override
+  public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
+    Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    ExtensionHelpers extensionHelpers = new ExtensionHelpers(callbacks);
+    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(callbacks, extensionHelpers,
+        systemClipboard);
+    callbacks.setExtensionName(EXTENSION_NAME);
+    callbacks.registerContextMenuFactory(contextMenuFactory);
+    callbacks.printOutput("'" + EXTENSION_NAME + "' added to the context menu");
+  }
+}
