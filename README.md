@@ -1,6 +1,6 @@
 # copy-as-powershell-requests
 [![Language](https://img.shields.io/badge/Lang-Java-blue.svg)](https://www.java.com)
-[![Language](https://img.shields.io/badge/.NET-blue.svg)](https://www.microsoft.com/net/)
+[![Language](https://img.shields.io/badge/Lang-.NET-blue.svg)](https://www.microsoft.com/net/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Copy as PowerShell request(s) plugin for the Burp Suite
