@@ -29,7 +29,7 @@ $ gradle fatJar
 ```
 
 ### Burp Suite settings
-In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button and load the `copy-as-powershell-requests-all` jarfile located in the `\build\libs` folder. 
+In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button and load the `copy-as-powershell-requests-all` jarfile located in the `.\build\libs` folder. 
 
 ## Possible Improvements
 - [ ] Add new features.
