@@ -53,7 +53,6 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
       stringBuilder
           .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
 
-      this.callbacks.printOutput(stringBuilder.toString());
       this.systemClipboard.setContents(new StringSelection(stringBuilder.toString()), this);
     });
 
