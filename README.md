@@ -9,8 +9,8 @@ Copies selected request(s) as [PowerShell request(s) invocation](https://docs.mi
 The extension is still in development, feedback and comments are much appreciated.
 
 ### Known issues
-Requests containing in body parameters of the following types are not yet fully supported:
-* PARAM_MULTIPART_ATTR
+Requests containing in body parameters of the following types are not fully supported yet:
+* PARAM_MULTIPART_ATTR - Web Cmdlets in PowerShell versions prior to 6.0.0-beta.8 do not support the submission of multipart/form-data, see https://github.com/PowerShell/PowerShell/pull/4782.
 * PARAM_XML
 * PARAM_XML_ATTR
 
