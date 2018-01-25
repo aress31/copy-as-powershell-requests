@@ -36,6 +36,9 @@ In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button a
 - [ ] Source code optimisation.
 - [ ] Support for more additional parameter types.
 
+## Credits
+[Original inspiration by PortSwigger's python requests extension.](https://github.com/PortSwigger/copy-as-python-requests)
+
 ## License
 Copyright 2018 Alexandre Teyar
 
