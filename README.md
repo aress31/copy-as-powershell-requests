@@ -11,9 +11,9 @@ The extension is still in development, feedback and comments are much appreciate
 
 ### Known issues
 Requests containing in body parameters of the following types are not fully supported yet:
-* PARAM_MULTIPART_ATTR - Web Cmdlets in PowerShell versions prior to 6.0.0-beta.8 do not support the submission of multipart/form-data, see https://github.com/PowerShell/PowerShell/pull/4782.
-* PARAM_XML
-* PARAM_XML_ATTR
+* **PARAM_MULTIPART_ATTR**: Web Cmdlets in PowerShell versions prior to 6.0.0-beta.8 do not support the submission of multipart/form-data, see https://github.com/PowerShell/PowerShell/pull/4782.
+* **PARAM_XML**
+* **PARAM_XML_ATTR**
 
 ## Installation
 ### Compilation 
@@ -34,8 +34,8 @@ In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button a
 
 ## Possible Improvements
 - [ ] Add new features:
-* Support for base64 copy.
-* Support for more additional parameter types.
+  - [ ] Support for base64 copy.
+  - [ ] Support for additional parameter types.
 - [ ] Source code optimisation.
 
 ## Credits
