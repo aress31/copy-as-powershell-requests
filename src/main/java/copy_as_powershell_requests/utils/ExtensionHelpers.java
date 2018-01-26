@@ -26,6 +26,7 @@ import org.apache.commons.text.StringEscapeUtils;
 public class ExtensionHelpers {
 
   private IBurpExtenderCallbacks callbacks;
+  private int maximumRedirection = 0;
   private boolean hasContentType;
   private boolean hasParamBody;
   private boolean hasParamJson;
@@ -49,10 +50,13 @@ public class ExtensionHelpers {
 
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::" + method)
         .append(System.lineSeparator()).append("$uri = [System.Uri]::new(\"" + uri + "\")")
+        .append(System.lineSeparator())
+        .append("$maximumRedirection = [System.Int32]" + this.maximumRedirection)
         .append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processParameters(requestInfo.getParameters()));
-    stringBuilder.append("Invoke-WebRequest -Method $method -Uri $uri -Headers $headers");
+    stringBuilder.append(
+        "Invoke-WebRequest -Method $method -Uri $uri -MaximumRedirection $maximumRedirection -Headers $headers");
 
     if (this.hasContentType) {
       stringBuilder.append(" -ContentType $contentType");
