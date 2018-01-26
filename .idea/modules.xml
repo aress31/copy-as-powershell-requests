@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests.iml" filepath="$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_main.iml" filepath="$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_main.iml" group="copy-as-powershell-requests" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_test.iml" filepath="$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_test.iml" group="copy-as-powershell-requests" />
-      <module fileurl="file://$PROJECT_DIR$/swurg.iml" filepath="$PROJECT_DIR$/swurg.iml" />
     </modules>
   </component>
 </project>

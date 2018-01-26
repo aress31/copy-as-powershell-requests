@@ -16,6 +16,7 @@
 
 package burp;
 
+import copy_as_powershell_requests.utils.ExtensionHelpers;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;

@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package burp;
+package copy_as_powershell_requests.utils;
 
+import burp.IBurpExtenderCallbacks;
+import burp.IHttpRequestResponse;
+import burp.IParameter;
+import burp.IRequestInfo;
 import java.util.List;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class ExtensionHelpers {
 
@@ -28,7 +33,7 @@ public class ExtensionHelpers {
   private boolean hasParamUrl;
   private boolean hasUserAgent;
 
-  ExtensionHelpers(IBurpExtenderCallbacks callbacks) {
+  public ExtensionHelpers(IBurpExtenderCallbacks callbacks) {
     this.callbacks = callbacks;
   }
 
@@ -36,13 +41,14 @@ public class ExtensionHelpers {
       IHttpRequestResponse selectedMessage) {
     IRequestInfo requestInfo = this.callbacks.getHelpers().analyzeRequest(selectedMessage);
     StringBuilder stringBuilder = new StringBuilder();
+    // prevents OS command injection
+    String method = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+        .escape(requestInfo.getMethod()).toString();
+    String uri = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+        .escape(requestInfo.getUrl().toString()).toString();
 
-    StringBuilder method = new StringBuilder(
-        "$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::" + requestInfo.getMethod());
-    StringBuilder uri = new StringBuilder(
-        "$uri = [System.Uri]::new('" + requestInfo.getUrl().toString() + "')");
-
-    stringBuilder.append(method).append(System.lineSeparator()).append(uri)
+    stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::" + method)
+        .append(System.lineSeparator()).append("$uri = [System.Uri]::new(\"" + uri + "\")")
         .append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processParameters(requestInfo.getParameters()));
@@ -100,23 +106,29 @@ public class ExtensionHelpers {
 
     // skip the first header line
     for (String header : headers.subList(1, headers.size())) {
-      if (!(header.split(": ")[0].toLowerCase().equals("connection") || header.split(": ")[0]
-          .toLowerCase().equals("content-length"))) {
+      // prevents OS command injection
+      String headerName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+          .escape((header.split(": ")[0] + "")).toString();
+      String headerValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+          .escape((header.split(": ")[1] + "")).toString();
+
+      if (!(headerName.toLowerCase().equals("connection") || headerName.toLowerCase()
+          .equals("content-length"))) {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasUserAgent = true;
-            stringBuilder.append("$contentType = '" + header.split(": ")[1] + "'")
+            stringBuilder.append("$contentType = (\"" + headerValue + "\")")
                 .append(System.lineSeparator());
             break;
           case "user-agent":
             this.hasUserAgent = true;
-            stringBuilder.append("$userAgent = '" + header.split(": ")[1] + "'")
+            stringBuilder.append("$userAgent = (\"" + headerValue + "\")")
                 .append(System.lineSeparator());
             break;
           default:
             stringBuilder.append(
-                "$headers.Add('" + header.split(": ")[0] + "', '" + header.split(": ")[1]
-                    + "')").append(System.lineSeparator());
+                "$headers.Add(\"" + headerName + "\", \"" + headerValue + "\")")
+                .append(System.lineSeparator());
             break;
         }
       }
@@ -138,6 +150,12 @@ public class ExtensionHelpers {
 
     if (!parameters.isEmpty()) {
       for (IParameter parameter : parameters) {
+        // prevents OS command injection
+        String parameterName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+            .escape(parameter.getName()).toString();
+        String parameterValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
+            .escape(parameter.getValue()).toString();
+
         switch (parameter.getType()) {
           case IParameter.PARAM_BODY:
             if (firstParamBody) {
@@ -149,8 +167,8 @@ public class ExtensionHelpers {
             }
 
             stringBuilder.append(
-                "$paramBody.Add('" + parameter.getName() + "', '" + parameter.getValue()
-                    + "')")
+                "$paramBody.Add(\"" + parameterName + "\", \"" + parameterValue
+                    + "\")")
                 .append(System.lineSeparator());
             break;
           case IParameter.PARAM_JSON:
@@ -163,8 +181,8 @@ public class ExtensionHelpers {
             }
 
             stringBuilder.append(
-                "$paramJson.Add('" + parameter.getName() + "', '" + parameter.getValue()
-                    + "')")
+                "$paramJson.Add(\"" + parameterName + "\", \"" + parameterValue
+                    + "\")")
                 .append(System.lineSeparator());
             break;
           case IParameter.PARAM_URL:
@@ -177,8 +195,8 @@ public class ExtensionHelpers {
             }
 
             stringBuilder.append(
-                "$paramUrl.Add('" + parameter.getName() + "', '" + parameter.getValue()
-                    + "')")
+                "$paramUrl.Add(\"" + parameterName + "\", \"" + parameterValue
+                    + "\")")
                 .append(System.lineSeparator());
             break;
           case IParameter.PARAM_MULTIPART_ATTR:
@@ -190,13 +208,13 @@ public class ExtensionHelpers {
 //              firstParamMultipart = false;
 //            }
 //
-//            stringBuilder.append(parameter.getName() + " --- " + parameter.getValue())
+//            stringBuilder.append(parameterName + " --- " + parameterValue)
 //                .append(System.lineSeparator());
             break;
           default:
             callbacks
                 .printError(
-                    "Please raise a new issue on https://github.com/AresS31/copy-as-powershell-requests.");
+                    "Please raise a new issue on https://github.com/AresS31/copy_as_powershell_requests.");
             break;
         }
       }

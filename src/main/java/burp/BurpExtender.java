@@ -16,12 +16,13 @@
 
 package burp;
 
+import static copy_as_powershell_requests.utils.StaticData.EXTENSION_NAME;
+
+import copy_as_powershell_requests.utils.ExtensionHelpers;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
 public class BurpExtender implements IBurpExtender {
-
-  private final static String EXTENSION_NAME = "Copy as PowerShell request(s)";
 
   @Override
   public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
