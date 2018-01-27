@@ -104,7 +104,7 @@ public class ExtensionHelpers {
           .equals("content-length"))) {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
-            this.hasUserAgent = true;
+            this.hasContentType = true;
             stringBuilder.append("$contentType = (\"" + headerValue + "\")")
                 .append(System.lineSeparator());
             break;
