@@ -191,8 +191,8 @@ public class ExtensionHelpers {
       this.hasBodyParams = true;
 
       if (isBase64) {
-        String postData = this.callbacks.getHelpers().bytesToString(
-            Base64.getEncoder().encode(Arrays.copyOfRange(request, bodyOffset, request.length)));
+        String postData = Base64.getEncoder()
+            .encodeToString(Arrays.copyOfRange(request, bodyOffset, request.length));
         stringBuilder.append("$bodyParams64 = [System.String]::new(\"").append(postData)
             .append("\")")
             .append(System.lineSeparator()).append(
