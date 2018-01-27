@@ -31,6 +31,7 @@ public class ExtensionHelpers {
   private int maximumRedirection = 0;
   private boolean hasContentType;
   private boolean hasBodyParams;
+  private boolean hasCookieParams;
   private boolean hasURLParams;
   private boolean hasUserAgent;
 
@@ -55,7 +56,7 @@ public class ExtensionHelpers {
         .append(this.maximumRedirection)
         .append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
-    stringBuilder.append(processURL(requestInfo.getParameters()));
+    stringBuilder.append(processParams(requestInfo.getParameters()));
     stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
     stringBuilder.append(
         "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers");
@@ -66,6 +67,10 @@ public class ExtensionHelpers {
 
     if (this.hasUserAgent) {
       stringBuilder.append(" -UserAgent $userAgent");
+    }
+
+    if (this.hasCookieParams) {
+      stringBuilder.append(" -WebSession $session ");
     }
 
     if (this.hasBodyParams) {
@@ -102,7 +107,7 @@ public class ExtensionHelpers {
           .escape((header.split(": ")[1] + "")).toString();
 
       if (!(headerName.toLowerCase().equals("connection") || headerName.toLowerCase()
-          .equals("content-length"))) {
+          .equals("content-length") || headerName.toLowerCase().equals("cookie"))) {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasContentType = true;
@@ -126,9 +131,11 @@ public class ExtensionHelpers {
     return stringBuilder;
   }
 
-  private StringBuilder processURL(List<IParameter> parameters) {
+  private StringBuilder processParams(List<IParameter> parameters) {
+    this.hasCookieParams = false;
     this.hasURLParams = false;
-    boolean isFirstIteration = true;
+    boolean isCookieFirstIteration = true;
+    boolean isURLFirstIteration = true;
     StringBuilder stringBuilder = new StringBuilder();
 
     if (!parameters.isEmpty()) {
@@ -140,16 +147,29 @@ public class ExtensionHelpers {
 
         switch (parameter.getType()) {
           case IParameter.PARAM_URL:
-            if (isFirstIteration) {
+            if (isURLFirstIteration) {
               this.hasURLParams = true;
               stringBuilder.append(
                   "$URLParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
                   .append(System.lineSeparator());
-              isFirstIteration = false;
+              isURLFirstIteration = false;
             }
 
             stringBuilder.append("$URLParams.Add(\"").append(parameterName).append("\", \"")
                 .append(parameterValue).append("\")")
+                .append(System.lineSeparator());
+            break;
+          case IParameter.PARAM_COOKIE:
+            if (isCookieFirstIteration) {
+              this.hasCookieParams = true;
+              stringBuilder.append(
+                  "$session = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
+                  .append(System.lineSeparator());
+              isCookieFirstIteration = false;
+            }
+
+            stringBuilder.append(
+                "$session.Cookies.Add($URI, [System.Net.Cookie]::new(\"" + parameterName + "\", \"" + parameterValue + "\"))")
                 .append(System.lineSeparator());
             break;
           default:
@@ -172,7 +192,7 @@ public class ExtensionHelpers {
       this.hasBodyParams = true;
 
       if (isBase64) {
-        String postData = callbacks.getHelpers().bytesToString(
+        String postData = this.callbacks.getHelpers().bytesToString(
             Base64.getEncoder().encode(Arrays.copyOfRange(request, bodyOffset, request.length)));
         stringBuilder.append("$bodyParams64 = [System.String]::new(\"").append(postData)
             .append("\")")
