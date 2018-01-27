@@ -9,12 +9,6 @@ Copies selected request(s) as [PowerShell request(s) invocation](https://docs.mi
 ## Project information
 The extension is still in development, feedback and comments are much appreciated.
 
-### Known issues
-Requests containing in body parameters of the following types are not fully supported yet:
-* **PARAM_MULTIPART_ATTR**: Web Cmdlets in PowerShell versions prior to 6.0.0-beta.8 do not support the submission of multipart/form-data, see https://github.com/PowerShell/PowerShell/pull/4782.
-* **PARAM_XML**
-* **PARAM_XML_ATTR**
-
 ## Installation
 ### Compilation 
 #### Windows & Unix
@@ -34,8 +28,7 @@ In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button a
 
 ## Possible Improvements
 - [ ] Add new features:
-  - [ ] Support for base64 copy.
-  - [ ] Support for additional parameter types.
+  - [ ] Base64 copy.
 - [ ] Source code optimisation.
 
 ## Credits
