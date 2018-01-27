@@ -32,6 +32,6 @@ public class BurpExtender implements IBurpExtender {
         systemClipboard);
     callbacks.setExtensionName(EXTENSION_NAME);
     callbacks.registerContextMenuFactory(contextMenuFactory);
-    callbacks.printOutput("'" + EXTENSION_NAME + "' added to the context menu");
+    callbacks.printOutput("New items have been added to the Burp Suite contextual menu.");
   }
 }

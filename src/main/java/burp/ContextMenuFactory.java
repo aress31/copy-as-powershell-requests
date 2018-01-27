@@ -41,24 +41,33 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
   @Override
   public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
     List<JMenuItem> jMenuItems = new ArrayList<>();
-    JMenuItem copy_as_powershell_request = new JMenuItem("Copy as PowerShell request(s)");
-    copy_as_powershell_request.addActionListener(e -> {
-      StringBuilder stringBuilder = new StringBuilder();
+    JMenuItem copy_as_powershell_requests = new JMenuItem("Copy as PowerShell request(s)");
+    copy_as_powershell_requests
+        .addActionListener(e -> copy_as_powershell_requests(invocation, false));
 
-      for (IHttpRequestResponse selectedMessage : invocation.getSelectedMessages()) {
-        stringBuilder.append(this.extensionHelpers.buildPowershellRequest(selectedMessage));
-        stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
-      }
+    JMenuItem copy_as_powershell_requests_base64 = new JMenuItem(
+        "Copy as PowerShell request(s) (base64-encoded body)");
+    copy_as_powershell_requests_base64
+        .addActionListener(e -> copy_as_powershell_requests(invocation, true));
 
-      // delete the last line separator
-      stringBuilder
-          .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
-
-      this.systemClipboard.setContents(new StringSelection(stringBuilder.toString()), this);
-    });
-
-    jMenuItems.add(copy_as_powershell_request);
+    jMenuItems.add(copy_as_powershell_requests);
+    jMenuItems.add(copy_as_powershell_requests_base64);
     return jMenuItems;
+  }
+
+  private void copy_as_powershell_requests(IContextMenuInvocation invocation, boolean isBase64) {
+    StringBuilder stringBuilder = new StringBuilder();
+
+    for (IHttpRequestResponse selectedMessage : invocation.getSelectedMessages()) {
+      stringBuilder.append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
+      stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
+    }
+
+    // delete the last line separator
+    stringBuilder
+        .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
+
+    this.systemClipboard.setContents(new StringSelection(stringBuilder.toString()), this);
   }
 
   @Override

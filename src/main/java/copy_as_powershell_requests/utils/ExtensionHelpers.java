@@ -21,6 +21,7 @@ import burp.IHttpRequestResponse;
 import burp.IParameter;
 import burp.IRequestInfo;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -38,7 +39,7 @@ public class ExtensionHelpers {
   }
 
   public StringBuilder buildPowershellRequest(
-      IHttpRequestResponse selectedMessage) {
+      IHttpRequestResponse selectedMessage, boolean isBase64) {
     IRequestInfo requestInfo = this.callbacks.getHelpers().analyzeRequest(selectedMessage);
     StringBuilder stringBuilder = new StringBuilder();
     String method = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
@@ -50,12 +51,12 @@ public class ExtensionHelpers {
         .append(method)
         .append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI)
         .append("\")")
-        .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32]")
+        .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32] ")
         .append(this.maximumRedirection)
         .append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processURL(requestInfo.getParameters()));
-    stringBuilder.append(processBody(selectedMessage, requestInfo));
+    stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
     stringBuilder.append(
         "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers");
 
@@ -105,17 +106,17 @@ public class ExtensionHelpers {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasContentType = true;
-            stringBuilder.append("$contentType = (\"" + headerValue + "\")")
+            stringBuilder.append("$contentType = (\"").append(headerValue).append("\")")
                 .append(System.lineSeparator());
             break;
           case "user-agent":
             this.hasUserAgent = true;
-            stringBuilder.append("$userAgent = (\"" + headerValue + "\")")
+            stringBuilder.append("$userAgent = (\"").append(headerValue).append("\")")
                 .append(System.lineSeparator());
             break;
           default:
-            stringBuilder.append(
-                "$headers.Add(\"" + headerName + "\", \"" + headerValue + "\")")
+            stringBuilder.append("$headers.Add(\"").append(headerName).append("\", \"")
+                .append(headerValue).append("\")")
                 .append(System.lineSeparator());
             break;
         }
@@ -147,9 +148,8 @@ public class ExtensionHelpers {
               isFirstIteration = false;
             }
 
-            stringBuilder.append(
-                "$URLParams.Add(\"" + parameterName + "\", \"" + parameterValue
-                    + "\")")
+            stringBuilder.append("$URLParams.Add(\"").append(parameterName).append("\", \"")
+                .append(parameterValue).append("\")")
                 .append(System.lineSeparator());
             break;
           default:
@@ -162,7 +162,7 @@ public class ExtensionHelpers {
   }
 
   private StringBuilder processBody(IHttpRequestResponse selectedMessage,
-      IRequestInfo requestInfo) {
+      IRequestInfo requestInfo, boolean isBase64) {
     this.hasBodyParams = false;
     int bodyOffset = requestInfo.getBodyOffset();
     byte[] request = selectedMessage.getRequest();
@@ -170,11 +170,22 @@ public class ExtensionHelpers {
 
     if (request.length > bodyOffset) {
       this.hasBodyParams = true;
-      String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
-          this.callbacks.getHelpers()
-              .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
-      stringBuilder.append("$bodyParams = [System.String]::new(\"").append(postData).append("\")")
-          .append(System.lineSeparator());
+
+      if (isBase64) {
+        String postData = callbacks.getHelpers().bytesToString(
+            Base64.getEncoder().encode(Arrays.copyOfRange(request, bodyOffset, request.length)));
+        stringBuilder.append("$bodyParams64 = [System.String]::new(\"").append(postData)
+            .append("\")")
+            .append(System.lineSeparator()).append(
+            "$bodyParams = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($bodyParams64))")
+            .append(System.lineSeparator());
+      } else {
+        String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
+            this.callbacks.getHelpers()
+                .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
+        stringBuilder.append("$bodyParams = [System.String]::new(\"").append(postData).append("\")")
+            .append(System.lineSeparator());
+      }
     }
 
     return stringBuilder;
