@@ -25,13 +25,15 @@ import java.awt.datatransfer.Clipboard;
 public class BurpExtender implements IBurpExtender {
 
   @Override
-  public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
+  public void registerExtenderCallbacks(IBurpExtenderCallbacks burpExtenderCallbacks) {
     Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    ExtensionHelpers extensionHelpers = new ExtensionHelpers(callbacks);
-    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(extensionHelpers,
+    ExtensionHelpers extensionHelpers = new ExtensionHelpers(burpExtenderCallbacks);
+    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(burpExtenderCallbacks,
+        extensionHelpers,
         systemClipboard);
-    callbacks.setExtensionName(EXTENSION_NAME);
-    callbacks.registerContextMenuFactory(contextMenuFactory);
-    callbacks.printOutput("New entries have been added to the Burp Suite contextual menu.");
+    burpExtenderCallbacks.setExtensionName(EXTENSION_NAME);
+    burpExtenderCallbacks.registerContextMenuFactory(contextMenuFactory);
+    burpExtenderCallbacks
+        .printOutput("New entries have been added to the Burp Suite contextual menu.");
   }
 }

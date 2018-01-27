@@ -27,7 +27,7 @@ import org.apache.commons.text.StringEscapeUtils;
 
 public class ExtensionHelpers {
 
-  private IBurpExtenderCallbacks callbacks;
+  private IBurpExtenderCallbacks burpExtenderCallbacks;
   private int maximumRedirection = 0;
   private boolean hasContentType;
   private boolean hasBodyParams;
@@ -35,13 +35,14 @@ public class ExtensionHelpers {
   private boolean hasURLParams;
   private boolean hasUserAgent;
 
-  public ExtensionHelpers(IBurpExtenderCallbacks callbacks) {
-    this.callbacks = callbacks;
+  public ExtensionHelpers(IBurpExtenderCallbacks burpExtenderCallbacks) {
+    this.burpExtenderCallbacks = burpExtenderCallbacks;
   }
 
   public StringBuilder buildPowershellRequest(
       IHttpRequestResponse selectedMessage, boolean isBase64) {
-    IRequestInfo requestInfo = this.callbacks.getHelpers().analyzeRequest(selectedMessage);
+    IRequestInfo requestInfo = this.burpExtenderCallbacks.getHelpers()
+        .analyzeRequest(selectedMessage);
     StringBuilder stringBuilder = new StringBuilder();
     String method = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
         .escape(requestInfo.getMethod()).toString();
@@ -200,7 +201,7 @@ public class ExtensionHelpers {
             .append(System.lineSeparator());
       } else {
         String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
-            this.callbacks.getHelpers()
+            this.burpExtenderCallbacks.getHelpers()
                 .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
         stringBuilder.append("$bodyParams = [System.String]::new(\"").append(postData).append("\")")
             .append(System.lineSeparator());

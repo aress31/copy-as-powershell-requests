@@ -27,10 +27,14 @@ import javax.swing.JMenuItem;
 
 public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
 
+  private IBurpExtenderCallbacks burpExtenderCallbacks;
   private Clipboard systemClipboard;
   private ExtensionHelpers extensionHelpers;
 
-  ContextMenuFactory(ExtensionHelpers extensionHelpers, Clipboard systemClipboard) {
+  ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks,
+      ExtensionHelpers extensionHelpers,
+      Clipboard systemClipboard) {
+    this.burpExtenderCallbacks = burpExtenderCallbacks;
     this.extensionHelpers = extensionHelpers;
     this.systemClipboard = systemClipboard;
   }
@@ -56,13 +60,21 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
     StringBuilder stringBuilder = new StringBuilder();
 
     for (IHttpRequestResponse selectedMessage : invocation.getSelectedMessages()) {
-      stringBuilder.append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
-      stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
+      if (selectedMessage.getRequest() != null) {
+        stringBuilder
+            .append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
+        stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
+      } else {
+        this.burpExtenderCallbacks.printError(
+            "The selected entry/ies contain(s) a null request content, please reissue the faulty request(s). ");
+      }
     }
 
     // delete the last line separator
-    stringBuilder
-        .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
+    if (stringBuilder.length() > 0) {
+      stringBuilder
+          .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
+    }
 
     this.systemClipboard.setContents(new StringSelection(stringBuilder.toString()), this);
   }
