@@ -59,23 +59,23 @@ public class ExtensionHelpers {
     stringBuilder.append(processParams(requestInfo.getParameters()));
     stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
     stringBuilder.append(
-        "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers");
+        "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers ");
 
     if (this.hasContentType) {
-      stringBuilder.append(" -ContentType $contentType");
+      stringBuilder.append("-ContentType $contentType ");
     }
 
     if (this.hasUserAgent) {
-      stringBuilder.append(" -UserAgent $userAgent");
+      stringBuilder.append("-UserAgent $userAgent ");
     }
 
     if (this.hasCookieParams) {
-      stringBuilder.append(" -WebSession $session ");
+      stringBuilder.append("-WebSession $session ");
     }
 
     if (this.hasBodyParams) {
       if (!stringBuilder.toString().contains("-Body")) {
-        stringBuilder.append(" -Body $BodyParams");
+        stringBuilder.append("-Body $BodyParams ");
       } else {
         stringBuilder.append(", $BodyParams");
       }
@@ -83,7 +83,7 @@ public class ExtensionHelpers {
 
     if (this.hasURLParams) {
       if (!stringBuilder.toString().contains("-Body")) {
-        stringBuilder.append(" -Body $URLParams");
+        stringBuilder.append("-Body $URLParams ");
       } else {
         stringBuilder.append(", $URLParams");
       }
