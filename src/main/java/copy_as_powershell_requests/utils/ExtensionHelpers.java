@@ -168,8 +168,8 @@ public class ExtensionHelpers {
               isCookieFirstIteration = false;
             }
 
-            stringBuilder.append(
-                "$session.Cookies.Add($URI, [System.Net.Cookie]::new(\"" + parameterName + "\", \"" + parameterValue + "\"))")
+            stringBuilder.append("$session.Cookies.Add($URI, [System.Net.Cookie]::new(\"")
+                .append(parameterName).append("\", \"").append(parameterValue).append("\"))")
                 .append(System.lineSeparator());
             break;
           default:

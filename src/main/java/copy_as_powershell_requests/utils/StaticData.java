@@ -38,8 +38,4 @@ public class StaticData {
         Collections.unmodifiableMap(escapePowershellMap)
     );
   }
-
-  public static String escapePowershell(final String input) {
-    return ESCAPE_POWERSHELL.translate(input);
-  }
 }

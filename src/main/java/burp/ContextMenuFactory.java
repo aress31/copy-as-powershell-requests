@@ -27,13 +27,10 @@ import javax.swing.JMenuItem;
 
 public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
 
-  private IBurpExtenderCallbacks callbacks;
   private Clipboard systemClipboard;
   private ExtensionHelpers extensionHelpers;
 
-  ContextMenuFactory(IBurpExtenderCallbacks callbacks, ExtensionHelpers extensionHelpers,
-      Clipboard systemClipboard) {
-    this.callbacks = callbacks;
+  ContextMenuFactory(ExtensionHelpers extensionHelpers, Clipboard systemClipboard) {
     this.extensionHelpers = extensionHelpers;
     this.systemClipboard = systemClipboard;
   }

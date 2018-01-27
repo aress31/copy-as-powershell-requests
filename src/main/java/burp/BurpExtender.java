@@ -28,10 +28,10 @@ public class BurpExtender implements IBurpExtender {
   public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
     Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     ExtensionHelpers extensionHelpers = new ExtensionHelpers(callbacks);
-    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(callbacks, extensionHelpers,
+    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(extensionHelpers,
         systemClipboard);
     callbacks.setExtensionName(EXTENSION_NAME);
     callbacks.registerContextMenuFactory(contextMenuFactory);
-    callbacks.printOutput("New items have been added to the Burp Suite contextual menu.");
+    callbacks.printOutput("New entries have been added to the Burp Suite contextual menu.");
   }
 }
