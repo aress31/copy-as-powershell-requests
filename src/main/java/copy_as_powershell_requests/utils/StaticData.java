@@ -16,8 +16,10 @@
 
 package copy_as_powershell_requests.utils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
@@ -26,6 +28,9 @@ public class StaticData {
 
   public final static String EXTENSION_NAME = "Copy as PowerShell request(s)";
   public static final CharSequenceTranslator ESCAPE_POWERSHELL;
+
+  public final static List<String> FORBIDDEN_HEADERS = Arrays
+      .asList("connection", "content-length", "cookie");
 
   static {
     // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html

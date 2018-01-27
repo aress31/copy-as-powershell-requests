@@ -74,7 +74,7 @@ public class ExtensionHelpers {
     }
 
     if (this.hasBodyParams) {
-      if (!stringBuilder.toString().contains("-Body")) {
+      if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $BodyParams ");
       } else {
         stringBuilder.append(", $BodyParams");
@@ -82,7 +82,7 @@ public class ExtensionHelpers {
     }
 
     if (this.hasURLParams) {
-      if (!stringBuilder.toString().contains("-Body")) {
+      if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $URLParams ");
       } else {
         stringBuilder.append(", $URLParams");
@@ -106,8 +106,7 @@ public class ExtensionHelpers {
       String headerValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
           .escape((header.split(": ")[1] + "")).toString();
 
-      if (!(headerName.toLowerCase().equals("connection") || headerName.toLowerCase()
-          .equals("content-length") || headerName.toLowerCase().equals("cookie"))) {
+      if (!(StaticData.FORBIDDEN_HEADERS.contains(headerName.toLowerCase()))) {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasContentType = true;
@@ -138,7 +137,7 @@ public class ExtensionHelpers {
     boolean isURLFirstIteration = true;
     StringBuilder stringBuilder = new StringBuilder();
 
-    if (!parameters.isEmpty()) {
+    if (!(parameters.isEmpty())) {
       for (IParameter parameter : parameters) {
         String parameterName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
             .escape(parameter.getName()).toString();
