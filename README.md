@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Copy as PowerShell request(s) plugin for the Burp Suite
-Copies selected request(s) as [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1).
+Copies selected request(s) as [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1) or [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1) with base64-encoded body, particularly useful when dealing with file uploads request(s).
 
 ## Project information
 The extension is still in development, feedback and comments are much appreciated.
