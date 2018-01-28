@@ -29,10 +29,10 @@ import org.apache.commons.text.StringEscapeUtils;
 public class ExtensionHelper {
 
   private IBurpExtenderCallbacks burpExtenderCallbacks;
+  private boolean hasBody;
   private boolean hasContentType;
-  private boolean hasBodyParams;
   private boolean hasCookieParams;
-  private boolean hasURLParams;
+  private boolean hasURIParams;
   private boolean hasUserAgent;
 
   public ExtensionHelper(IBurpExtenderCallbacks burpExtenderCallbacks) {
@@ -79,7 +79,7 @@ public class ExtensionHelper {
       stringBuilder.append("-WebSession $webSession ");
     }
 
-    if (this.hasBodyParams) {
+    if (this.hasBody) {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $body ");
       } else {
@@ -88,7 +88,7 @@ public class ExtensionHelper {
       }
     }
 
-    if (this.hasURLParams) {
+    if (this.hasURIParams) {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $URIParams ");
       } else {
@@ -142,7 +142,7 @@ public class ExtensionHelper {
 
   private StringBuilder processParams(List<IParameter> parameters) {
     this.hasCookieParams = false;
-    this.hasURLParams = false;
+    this.hasURIParams = false;
     boolean isCookieFirstIteration = true;
     boolean isURLFirstIteration = true;
     StringBuilder stringBuilder = new StringBuilder();
@@ -157,7 +157,7 @@ public class ExtensionHelper {
         switch (parameter.getType()) {
           case IParameter.PARAM_URL:
             if (isURLFirstIteration) {
-              this.hasURLParams = true;
+              this.hasURIParams = true;
               stringBuilder.append(
                   "$URIParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
                   .append(System.lineSeparator());
@@ -192,13 +192,13 @@ public class ExtensionHelper {
 
   private StringBuilder processBody(IHttpRequestResponse selectedMessage,
       IRequestInfo requestInfo, boolean isBase64) {
-    this.hasBodyParams = false;
+    this.hasBody = false;
     int bodyOffset = requestInfo.getBodyOffset();
     byte[] request = selectedMessage.getRequest();
     StringBuilder stringBuilder = new StringBuilder();
 
     if (request.length > bodyOffset) {
-      this.hasBodyParams = true;
+      this.hasBody = true;
 
       if (isBase64) {
         String postData = Base64.getEncoder()
