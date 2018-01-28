@@ -84,7 +84,7 @@ public class ExtensionHelper {
         stringBuilder.append("-Body $body ");
       } else {
         stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $body");
+        stringBuilder.append(", $body ");
       }
     }
 
@@ -93,7 +93,7 @@ public class ExtensionHelper {
         stringBuilder.append("-Body $URIParams ");
       } else {
         stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $URIParams");
+        stringBuilder.append(", $URIParams ");
       }
     }
 
