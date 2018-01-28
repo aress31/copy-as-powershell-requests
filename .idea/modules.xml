@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/copy-as-powershell-requests.iml" filepath="$PROJECT_DIR$/.idea/copy-as-powershell-requests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_main.iml" filepath="$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_main.iml" group="copy-as-powershell-requests" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_test.iml" filepath="$PROJECT_DIR$/.idea/modules/copy-as-powershell-requests_test.iml" group="copy-as-powershell-requests" />
+    </modules>
+  </component>
+</project>
