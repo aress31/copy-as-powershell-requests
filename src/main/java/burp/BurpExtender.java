@@ -34,6 +34,6 @@ public class BurpExtender implements IBurpExtender {
     burpExtenderCallbacks.setExtensionName(EXTENSION_NAME);
     burpExtenderCallbacks.registerContextMenuFactory(contextMenuFactory);
     burpExtenderCallbacks
-        .printOutput("New entries have been added to the Burp Suite contextual menu.");
+        .printOutput("New entries have been added to the Burp Suite context menu.");
   }
 }
