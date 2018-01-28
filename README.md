@@ -23,14 +23,14 @@ $ cd .\copy-as-powershell-requests\
 $ gradle fatJar
 ```
 
-### Burp Suite settings
+### Burp Suite import
 In Burp Suite, under the `Extender/Options` tab, click on the `Add` button and load the `copy-as-powershell-requests-all` jar file located in the `.\build\libs` folder.
 
 ## Possible improvements
 - [ ] Source code optimisation.
 
 ## Credits
-Original inspiration by [PortSwigger's python requests extension](https://github.com/PortSwigger/copy-as-python-requests).
+Original inspiration by [PortSwigger's copy as curl command function](http://releases.portswigger.net/2013/09/v1517.html).
 
 ## License
 Copyright 2018 Alexandre Teyar
