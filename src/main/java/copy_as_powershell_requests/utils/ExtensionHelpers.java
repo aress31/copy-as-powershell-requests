@@ -50,7 +50,7 @@ public class ExtensionHelpers {
         .escape(requestInfo.getUrl().toString()).toString();
 
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::")
-        .append(method)
+        .append("\"").append(method).append("\"")
         .append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI)
         .append("\")")
         .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32] ")
