@@ -38,7 +38,7 @@ public class StaticData {
   static {
     // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html
     ESCAPE_POWERSHELL = new LookupTranslator(
-        Map.of("`", "``", "#", "`#", "\"", "`\"", "'", "`'", ";", "`;")
+        Map.of("`", "``", "#", "`#", "\"", "`\"", "'", "`'")
     );
   }
 }
