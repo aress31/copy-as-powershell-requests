@@ -49,9 +49,9 @@ public class ExtensionHelpers {
     String URI = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
         .escape(requestInfo.getUrl().toString()).toString();
 
-    if (!StaticData.METHODS.contains(method)) {
-        this.burpExtenderCallbacks.issueAlert(
-            "The copied method is not supported by PowerShell Invoke-WebRequest.");
+    if (!(StaticData.SUPPORTED_METHODS.contains(method))) {
+      this.burpExtenderCallbacks.issueAlert(
+          "The copied method is not supported by PowerShell Invoke-WebRequest.");
     }
 
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::")
@@ -112,7 +112,7 @@ public class ExtensionHelpers {
       String headerValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
           .escape((header.split(": ")[1] + "")).toString();
 
-      if (!(StaticData.FORBIDDEN_HEADERS.contains(headerName.toLowerCase()))) {
+      if (!(StaticData.SKIP_HEADERS.contains(headerName.toLowerCase()))) {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasContentType = true;
