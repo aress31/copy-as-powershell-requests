@@ -40,26 +40,27 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
   }
 
   @Override
-  public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
+  public List<JMenuItem> createMenuItems(IContextMenuInvocation contextMenuInvocation) {
     List<JMenuItem> jMenuItems = new ArrayList<>();
     JMenuItem copy_as_powershell_requests = new JMenuItem("Copy as PowerShell request(s)");
     copy_as_powershell_requests
-        .addActionListener(e -> copy_as_powershell_requests(invocation, false));
+        .addActionListener(e -> copy_as_powershell_requests(contextMenuInvocation, false));
 
     JMenuItem copy_as_powershell_requests_base64 = new JMenuItem(
         "Copy as PowerShell request(s) (base64-encoded body)");
     copy_as_powershell_requests_base64
-        .addActionListener(e -> copy_as_powershell_requests(invocation, true));
+        .addActionListener(e -> copy_as_powershell_requests(contextMenuInvocation, true));
 
     jMenuItems.add(copy_as_powershell_requests);
     jMenuItems.add(copy_as_powershell_requests_base64);
     return jMenuItems;
   }
 
-  private void copy_as_powershell_requests(IContextMenuInvocation invocation, boolean isBase64) {
+  private void copy_as_powershell_requests(IContextMenuInvocation contextMenuInvocation,
+      boolean isBase64) {
     StringBuilder stringBuilder = new StringBuilder();
 
-    for (IHttpRequestResponse selectedMessage : invocation.getSelectedMessages()) {
+    for (IHttpRequestResponse selectedMessage : contextMenuInvocation.getSelectedMessages()) {
       if (selectedMessage.getRequest() != null) {
         stringBuilder
             .append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
