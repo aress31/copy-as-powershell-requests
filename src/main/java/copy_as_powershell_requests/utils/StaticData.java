@@ -32,6 +32,10 @@ public class StaticData {
   public final static List<String> FORBIDDEN_HEADERS = Arrays
       .asList("connection", "content-length", "cookie");
 
+  public final static List<String> METHODS = Arrays
+      // reference used for methods: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest
+      .asList("DEFAULT", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "OPTIONS", "MERGE", "PATCH");
+
   static {
     // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html
     final Map<CharSequence, CharSequence> escapePowershellMap = new HashMap<>();
@@ -39,6 +43,7 @@ public class StaticData {
     escapePowershellMap.put("#", "`#");
     escapePowershellMap.put("\"", "`\"");
     escapePowershellMap.put("'", "`'");
+    escapePowershellMap.put(";", "`;");
     ESCAPE_POWERSHELL = new LookupTranslator(
         Collections.unmodifiableMap(escapePowershellMap)
     );

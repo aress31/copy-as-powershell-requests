@@ -49,8 +49,13 @@ public class ExtensionHelpers {
     String URI = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
         .escape(requestInfo.getUrl().toString()).toString();
 
+    if (!StaticData.METHODS.contains(method)) {
+        this.burpExtenderCallbacks.issueAlert(
+            "The copied method is not supported by PowerShell Invoke-WebRequest.");
+    }
+
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::")
-        .append(method)
+        .append("\"").append(method).append("\"")
         .append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI)
         .append("\")")
         .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32] ")
