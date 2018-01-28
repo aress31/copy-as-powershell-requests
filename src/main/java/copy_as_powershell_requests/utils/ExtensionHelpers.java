@@ -28,7 +28,6 @@ import org.apache.commons.text.StringEscapeUtils;
 public class ExtensionHelpers {
 
   private IBurpExtenderCallbacks burpExtenderCallbacks;
-  private int maximumRedirection = 0;
   private boolean hasContentType;
   private boolean hasBodyParams;
   private boolean hasCookieParams;
@@ -59,13 +58,12 @@ public class ExtensionHelpers {
         .append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI)
         .append("\")")
         .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32] ")
-        .append(this.maximumRedirection)
+        .append(StaticData.IWR_MAXIMUM_REDIRECTION)
         .append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processParams(requestInfo.getParameters()));
     stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
-    stringBuilder.append(
-        "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers ");
+    stringBuilder.append(StaticData.IWR_BASIC_INVOCATION);
 
     if (this.hasContentType) {
       stringBuilder.append("-ContentType $contentType ");
@@ -83,6 +81,7 @@ public class ExtensionHelpers {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $body ");
       } else {
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
         stringBuilder.append(", $body");
       }
     }
@@ -91,6 +90,7 @@ public class ExtensionHelpers {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $URIParams ");
       } else {
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
         stringBuilder.append(", $URIParams");
       }
     }

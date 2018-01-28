@@ -25,7 +25,11 @@ import org.apache.commons.text.translate.LookupTranslator;
 public class StaticData {
 
   public final static String EXTENSION_NAME = "Copy as PowerShell request(s)";
-  // reference used for methods: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest
+  public final static int IWR_MAXIMUM_REDIRECTION = 0;
+  public final static String IWR_BASIC_INVOCATION =
+      "Invoke-WebRequest -Method $method -Uri $URI -MaximumRedirection $maximumRedirection -Headers $headers ";
+  // reference used for methods:
+  // https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest
   public final static List<String> SUPPORTED_METHODS = Arrays
       .asList("DEFAULT", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "OPTIONS", "MERGE",
           "PATCH");
