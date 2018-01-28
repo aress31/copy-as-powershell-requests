@@ -76,7 +76,7 @@ public class ExtensionHelpers {
     }
 
     if (this.hasCookieParams) {
-      stringBuilder.append("-WebSession $session ");
+      stringBuilder.append("-WebSession $webSession ");
     }
 
     if (this.hasBodyParams) {
@@ -170,12 +170,12 @@ public class ExtensionHelpers {
             if (isCookieFirstIteration) {
               this.hasCookieParams = true;
               stringBuilder.append(
-                  "$session = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
+                  "$webSession = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
                   .append(System.lineSeparator());
               isCookieFirstIteration = false;
             }
 
-            stringBuilder.append("$session.Cookies.Add($URI, [System.Net.Cookie]::new(\"")
+            stringBuilder.append("$webSession.Cookies.Add($URI, [System.Net.Cookie]::new(\"")
                 .append(parameterName).append("\", \"").append(parameterValue).append("\"))")
                 .append(System.lineSeparator());
             break;
