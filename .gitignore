@@ -8,9 +8,9 @@ bin/
 build/
 
 # Intellij
+*.iml
 .idea/dictionaries
 .idea/gradle.xml
 .idea/libraries
 .idea/tasks.xml
 .idea/workspace.xml
-*.iml
