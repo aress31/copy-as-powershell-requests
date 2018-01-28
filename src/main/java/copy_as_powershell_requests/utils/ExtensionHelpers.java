@@ -51,7 +51,7 @@ public class ExtensionHelpers {
 
     if (!(StaticData.SUPPORTED_METHODS.contains(method))) {
       this.burpExtenderCallbacks.issueAlert(
-          "The copied method is not supported by PowerShell Invoke-WebRequest.");
+          "The copied method(s) is/are not supported by PowerShell Invoke-WebRequest.");
     }
 
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::")

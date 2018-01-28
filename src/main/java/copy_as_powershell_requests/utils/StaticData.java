@@ -25,20 +25,14 @@ import org.apache.commons.text.translate.LookupTranslator;
 public class StaticData {
 
   public final static String EXTENSION_NAME = "Copy as PowerShell request(s)";
-  public static final CharSequenceTranslator ESCAPE_POWERSHELL;
-
-  public final static List<String> SKIP_HEADERS = Arrays
-      .asList("connection", "content-length", "cookie");
-
+  // reference used for methods: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest
   public final static List<String> SUPPORTED_METHODS = Arrays
-      // reference used for methods: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest
       .asList("DEFAULT", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "OPTIONS", "MERGE",
           "PATCH");
-
-  static {
-    // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html
-    ESCAPE_POWERSHELL = new LookupTranslator(
-        Map.of("`", "``", "#", "`#", "\"", "`\"", "'", "`'")
-    );
-  }
+  public final static List<String> SKIP_HEADERS = Arrays
+      .asList("connection", "content-length", "cookie");
+  // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html
+  public static final CharSequenceTranslator ESCAPE_POWERSHELL = new LookupTranslator(
+      Map.of("`", "``", "#", "`#", "\"", "`\"", "'", "`'")
+  );
 }

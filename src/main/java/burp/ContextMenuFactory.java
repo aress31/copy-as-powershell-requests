@@ -65,8 +65,8 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
             .append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
         stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
       } else {
-        this.burpExtenderCallbacks.printError(
-            "The selected entry/ies contain(s) a null request content, please reissue the faulty request(s). ");
+        this.burpExtenderCallbacks.issueAlert(
+            "The selected entry/ies contain(s) a null request content.");
       }
     }
 
