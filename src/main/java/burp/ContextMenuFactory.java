@@ -66,7 +66,7 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
         stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
       } else {
         this.burpExtenderCallbacks.issueAlert(
-            "The selected entry/ies contain(s) a null request content.");
+            "The selected request is null.");
       }
     }
 
