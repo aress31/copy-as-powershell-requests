@@ -23,6 +23,7 @@ import burp.IRequestInfo;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 public class ExtensionHelper {
@@ -50,7 +51,7 @@ public class ExtensionHelper {
 
     if (!(StaticData.SUPPORTED_METHODS.contains(method))) {
       this.burpExtenderCallbacks.issueAlert(
-          "The \"" + method.substring(0, Math.min(method.length(), 10))
+          "The \"" + StringUtils.abbreviate(method, 16)
               + "\" method is not supported by PowerShell Invoke-WebRequest.");
     }
 
