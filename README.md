@@ -3,11 +3,11 @@
 [![Language](https://img.shields.io/badge/Lang-.NET-blue.svg)](https://www.microsoft.com/net/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Copy as PowerShell request(s) plugin for the Burp Suite
-Copies selected request(s) as [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1) or [PowerShell request(s) invocation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1) with base64-encoded body, particularly useful when dealing with file uploads request(s).
+## Copy as PowerShell request(s) plugin for Burp Suite
+This extension copies the selected request(s) to the clipboard as PowerShell object assignments. Standard or Base64 formats are available, with Base64 being the best option for for binary data such as file uploads. Copied data also includes the necessary command to [invoke the web request(s)](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1).</p>
 
 ## Project information
-The extension is still in development, feedback and comments are much appreciated.
+Suggestions for improvement, feedback and comments will be much appreciated.
 
 ## Installation
 ### Compilation 
@@ -24,9 +24,9 @@ $ gradle fatJar
 ```
 
 ### Burp Suite settings
-In the Burp Suite, under the `Extender/Options` tab, click on the `Add` button and load the `copy-as-powershell-requests-all` jarfile located in the `.\build\libs` folder. 
+In Burp Suite, under the `Extender/Options` tab, click on the `Add` button and load the `copy-as-powershell-requests-all` jar file located in the `.\build\libs` folder.
 
-## Possible Improvements
+## Possible improvements
 - [ ] Source code optimisation.
 
 ## Credits
