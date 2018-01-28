@@ -81,17 +81,17 @@ public class ExtensionHelpers {
 
     if (this.hasBodyParams) {
       if (!(stringBuilder.toString().contains("-Body"))) {
-        stringBuilder.append("-Body $BodyParams ");
+        stringBuilder.append("-Body $body ");
       } else {
-        stringBuilder.append(", $BodyParams");
+        stringBuilder.append(", $body");
       }
     }
 
     if (this.hasURLParams) {
       if (!(stringBuilder.toString().contains("-Body"))) {
-        stringBuilder.append("-Body $URLParams ");
+        stringBuilder.append("-Body $URIParams ");
       } else {
-        stringBuilder.append(", $URLParams");
+        stringBuilder.append(", $URIParams");
       }
     }
 
@@ -157,12 +157,12 @@ public class ExtensionHelpers {
             if (isURLFirstIteration) {
               this.hasURLParams = true;
               stringBuilder.append(
-                  "$URLParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
+                  "$URIParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
                   .append(System.lineSeparator());
               isURLFirstIteration = false;
             }
 
-            stringBuilder.append("$URLParams.Add(\"").append(parameterName).append("\", \"")
+            stringBuilder.append("$URIParams.Add(\"").append(parameterName).append("\", \"")
                 .append(parameterValue).append("\")")
                 .append(System.lineSeparator());
             break;
@@ -201,16 +201,16 @@ public class ExtensionHelpers {
       if (isBase64) {
         String postData = Base64.getEncoder()
             .encodeToString(Arrays.copyOfRange(request, bodyOffset, request.length));
-        stringBuilder.append("$bodyParams64 = [System.String]::new(\"").append(postData)
+        stringBuilder.append("$body64 = [System.String]::new(\"").append(postData)
             .append("\")")
             .append(System.lineSeparator()).append(
-            "$bodyParams = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($bodyParams64))")
+            "$body = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($body64))")
             .append(System.lineSeparator());
       } else {
         String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
             this.burpExtenderCallbacks.getHelpers()
                 .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
-        stringBuilder.append("$bodyParams = [System.String]::new(\"").append(postData).append("\")")
+        stringBuilder.append("$body = [System.String]::new(\"").append(postData).append("\")")
             .append(System.lineSeparator());
       }
     }
