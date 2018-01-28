@@ -116,12 +116,14 @@ public class ExtensionHelpers {
         switch (header.split(": ")[0].toLowerCase()) {
           case "content-type":
             this.hasContentType = true;
-            stringBuilder.append("$contentType = (\"").append(headerValue).append("\")")
+            stringBuilder.append("$contentType = [System.String]::new(\"").append(headerValue)
+                .append("\")")
                 .append(System.lineSeparator());
             break;
           case "user-agent":
             this.hasUserAgent = true;
-            stringBuilder.append("$userAgent = (\"").append(headerValue).append("\")")
+            stringBuilder.append("$userAgent = [System.String]::new(\"").append(headerValue)
+                .append("\")")
                 .append(System.lineSeparator());
             break;
           default:
