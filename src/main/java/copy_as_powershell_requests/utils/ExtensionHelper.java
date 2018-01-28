@@ -25,7 +25,7 @@ import java.util.Base64;
 import java.util.List;
 import org.apache.commons.text.StringEscapeUtils;
 
-public class ExtensionHelpers {
+public class ExtensionHelper {
 
   private IBurpExtenderCallbacks burpExtenderCallbacks;
   private boolean hasContentType;
@@ -34,7 +34,7 @@ public class ExtensionHelpers {
   private boolean hasURLParams;
   private boolean hasUserAgent;
 
-  public ExtensionHelpers(IBurpExtenderCallbacks burpExtenderCallbacks) {
+  public ExtensionHelper(IBurpExtenderCallbacks burpExtenderCallbacks) {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
   }
 

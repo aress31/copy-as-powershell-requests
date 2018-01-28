@@ -18,7 +18,7 @@ package burp;
 
 import static copy_as_powershell_requests.utils.StaticData.EXTENSION_NAME;
 
-import copy_as_powershell_requests.utils.ExtensionHelpers;
+import copy_as_powershell_requests.utils.ExtensionHelper;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
@@ -27,9 +27,9 @@ public class BurpExtender implements IBurpExtender {
   @Override
   public void registerExtenderCallbacks(IBurpExtenderCallbacks burpExtenderCallbacks) {
     Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    ExtensionHelpers extensionHelpers = new ExtensionHelpers(burpExtenderCallbacks);
+    ExtensionHelper extensionHelper = new ExtensionHelper(burpExtenderCallbacks);
     ContextMenuFactory contextMenuFactory = new ContextMenuFactory(burpExtenderCallbacks,
-        extensionHelpers,
+        extensionHelper,
         systemClipboard);
     burpExtenderCallbacks.setExtensionName(EXTENSION_NAME);
     burpExtenderCallbacks.registerContextMenuFactory(contextMenuFactory);

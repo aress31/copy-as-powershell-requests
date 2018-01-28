@@ -16,7 +16,7 @@
 
 package burp;
 
-import copy_as_powershell_requests.utils.ExtensionHelpers;
+import copy_as_powershell_requests.utils.ExtensionHelper;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
@@ -29,13 +29,13 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
 
   private IBurpExtenderCallbacks burpExtenderCallbacks;
   private Clipboard systemClipboard;
-  private ExtensionHelpers extensionHelpers;
+  private ExtensionHelper extensionHelper;
 
   ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks,
-      ExtensionHelpers extensionHelpers,
+      ExtensionHelper extensionHelper,
       Clipboard systemClipboard) {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
-    this.extensionHelpers = extensionHelpers;
+    this.extensionHelper = extensionHelper;
     this.systemClipboard = systemClipboard;
   }
 
@@ -63,7 +63,7 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
     for (IHttpRequestResponse selectedMessage : contextMenuInvocation.getSelectedMessages()) {
       if (selectedMessage.getRequest() != null) {
         stringBuilder
-            .append(this.extensionHelpers.buildPowershellRequest(selectedMessage, isBase64));
+            .append(this.extensionHelper.buildPowershellRequest(selectedMessage, isBase64));
         stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
       } else {
         this.burpExtenderCallbacks.issueAlert(
