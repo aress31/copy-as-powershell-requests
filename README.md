@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Copy as PowerShell request(s) plugin for Burp Suite
-This extension copies the selected request(s) to the clipboard as PowerShell object assignments. Standard or Base64 formats are available, with Base64 being the best option for for binary data such as file uploads. Copied data also includes the necessary command to [invoke the web request(s)](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1).</p>
+This extension copies the selected request(s) to the clipboard as PowerShell object assignments. Standard or Base64 formats are available, with Base64 being the best option for binary data such as file uploads. Copied data also includes the necessary command to [invoke the web request(s)](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-5.1).</p>
 
 ## Project information
 Suggestions for improvement, feedback and comments will be much appreciated.
