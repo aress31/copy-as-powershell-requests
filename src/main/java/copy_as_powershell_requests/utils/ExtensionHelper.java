@@ -34,6 +34,8 @@ public class ExtensionHelper {
   private boolean hasCookieParams;
   private boolean hasURIParams;
   private boolean hasUserAgent;
+  private boolean isBase64;
+  private boolean isStandard;
 
   public ExtensionHelper(IBurpExtenderCallbacks burpExtenderCallbacks) {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
@@ -79,7 +81,14 @@ public class ExtensionHelper {
       stringBuilder.append("-WebSession $webSession ");
     }
 
-    if (this.hasBody) {
+    if (this.hasBody && this.isBase64) {
+      if (!(stringBuilder.toString().contains("-Body"))) {
+        stringBuilder.append("-Body $bytes ");
+      } else {
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
+        stringBuilder.append(", $byes ");
+      }
+    } else if (this.hasBody && this.isStandard) {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $body ");
       } else {
@@ -193,6 +202,8 @@ public class ExtensionHelper {
   private StringBuilder processBody(IHttpRequestResponse selectedMessage,
       IRequestInfo requestInfo, boolean isBase64) {
     this.hasBody = false;
+    this.isBase64 = false;
+    this.isStandard = false;
     int bodyOffset = requestInfo.getBodyOffset();
     byte[] request = selectedMessage.getRequest();
     StringBuilder stringBuilder = new StringBuilder();
@@ -201,14 +212,16 @@ public class ExtensionHelper {
       this.hasBody = true;
 
       if (isBase64) {
+        this.isBase64 = true;
         String postData = Base64.getEncoder()
             .encodeToString(Arrays.copyOfRange(request, bodyOffset, request.length));
         stringBuilder.append("$body64 = [System.String]::new(\"").append(postData)
             .append("\")")
             .append(System.lineSeparator()).append(
-            "$body = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($body64))")
+            "$bytes = [System.Convert]::FromBase64String($body64)")
             .append(System.lineSeparator());
       } else {
+        this.isStandard = true;
         String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
             this.burpExtenderCallbacks.getHelpers()
                 .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
