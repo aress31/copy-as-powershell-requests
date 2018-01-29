@@ -86,7 +86,7 @@ public class ExtensionHelper {
         stringBuilder.append("-Body $bytes ");
       } else {
         stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $byes ");
+        stringBuilder.append(", $bytes ");
       }
     } else if (this.hasBody && this.isStandard) {
       if (!(stringBuilder.toString().contains("-Body"))) {
