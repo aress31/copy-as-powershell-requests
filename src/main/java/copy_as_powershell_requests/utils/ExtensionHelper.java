@@ -105,6 +105,7 @@ public class ExtensionHelper {
 
     stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(")")
         .append(System.lineSeparator()).append("$response");
+    
     return stringBuilder;
   }
 
