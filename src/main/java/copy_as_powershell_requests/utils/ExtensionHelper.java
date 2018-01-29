@@ -67,7 +67,7 @@ public class ExtensionHelper {
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processParams(requestInfo.getParameters()));
     stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
-    stringBuilder.append(StaticData.IWR_BASIC_INVOCATION);
+    stringBuilder.append("$response = (").append(StaticData.IWR_BASIC_INVOCATION);
 
     if (this.hasContentType) {
       stringBuilder.append("-ContentType $contentType ");
@@ -85,15 +85,13 @@ public class ExtensionHelper {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $bytes ");
       } else {
-        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $bytes ");
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(", $bytes ");
       }
     } else if (this.hasBody && this.isStandard) {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $body ");
       } else {
-        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $body ");
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(", $body ");
       }
     }
 
@@ -101,11 +99,12 @@ public class ExtensionHelper {
       if (!(stringBuilder.toString().contains("-Body"))) {
         stringBuilder.append("-Body $URIParams ");
       } else {
-        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" "));
-        stringBuilder.append(", $URIParams ");
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(", $URIParams ");
       }
     }
 
+    stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(")")
+        .append(System.lineSeparator()).append("$response");
     return stringBuilder;
   }
 
