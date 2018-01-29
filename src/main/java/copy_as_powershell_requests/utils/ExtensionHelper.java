@@ -20,6 +20,7 @@ import burp.IBurpExtenderCallbacks;
 import burp.IHttpRequestResponse;
 import burp.IParameter;
 import burp.IRequestInfo;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -105,7 +106,7 @@ public class ExtensionHelper {
 
     stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(")")
         .append(System.lineSeparator()).append("$response");
-    
+
     return stringBuilder;
   }
 
@@ -167,10 +168,10 @@ public class ExtensionHelper {
           case IParameter.PARAM_URL:
             if (isURLFirstIteration) {
               this.hasURIParams = true;
+              isURLFirstIteration = false;
               stringBuilder.append(
                   "$URIParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
                   .append(System.lineSeparator());
-              isURLFirstIteration = false;
             }
 
             stringBuilder.append("$URIParams.Add(\"").append(parameterName).append("\", \"")
@@ -180,10 +181,10 @@ public class ExtensionHelper {
           case IParameter.PARAM_COOKIE:
             if (isCookieFirstIteration) {
               this.hasCookieParams = true;
+              isCookieFirstIteration = false;
               stringBuilder.append(
                   "$webSession = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
                   .append(System.lineSeparator());
-              isCookieFirstIteration = false;
             }
 
             stringBuilder.append("$webSession.Cookies.Add($URI, [System.Net.Cookie]::new(\"")
@@ -210,22 +211,22 @@ public class ExtensionHelper {
 
     if (request.length > bodyOffset) {
       this.hasBody = true;
+      byte[] data = Arrays.copyOfRange(request, bodyOffset, request.length);
 
       if (isBase64) {
         this.isBase64 = true;
-        String postData = Base64.getEncoder()
-            .encodeToString(Arrays.copyOfRange(request, bodyOffset, request.length));
-        stringBuilder.append("$body64 = [System.String]::new(\"").append(postData)
+        String body64 = Base64.getEncoder().encodeToString(data);
+        stringBuilder.append("$body64 = [System.String]::new(\"").append(body64)
             .append("\")")
             .append(System.lineSeparator()).append(
             "$bytes = [System.Convert]::FromBase64String($body64)")
             .append(System.lineSeparator());
       } else {
         this.isStandard = true;
-        String postData = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(
-            this.burpExtenderCallbacks.getHelpers()
-                .bytesToString(Arrays.copyOfRange(request, bodyOffset, request.length))).toString();
-        stringBuilder.append("$body = [System.String]::new(\"").append(postData).append("\")")
+        String body = StringEscapeUtils
+            .builder(StaticData.ESCAPE_POWERSHELL)
+            .escape(new String(data, StandardCharsets.ISO_8859_1)).toString();
+        stringBuilder.append("$body = [System.String]::new(\"").append(body).append("\")")
             .append(System.lineSeparator());
       }
     }
