@@ -18,7 +18,7 @@ package copy_as_powershell_requests.utils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
 
@@ -37,6 +37,13 @@ public class StaticData {
       .asList("connection", "content-length", "cookie");
   // reference used for escaping rules: https://ss64.com/ps/syntax-esc.html
   public static final CharSequenceTranslator ESCAPE_POWERSHELL = new LookupTranslator(
-      Map.of("`", "``", "#", "`#", "\"", "`\"", "'", "`'")
+        new HashMap() {
+          {
+            put("`", "``");
+            put("#", "`#");
+            put("\"", "`\"");
+            put("'", "`'");
+          }
+        }
   );
 }
