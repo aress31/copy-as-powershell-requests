@@ -7,6 +7,6 @@ SerialVersion: 1
 MinPlatformVersion: 0
 ProOnly: False
 Author: Alexandre Teyar, Foregenix Ltd
-ShortDescription: Copies the selected requests as PowerShell request code.
+ShortDescription: Copies the selected request(s) as PowerShell invocation(s).
 EntryPoint: build/libs/copy-as-powershell-requests-all.jar
 BuildCommand: gradle fatJar
