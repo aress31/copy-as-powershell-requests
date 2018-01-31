@@ -1,4 +1,5 @@
 # copy-as-powershell-requests
+[![BApp Store](https://img.shields.io/badge/BApp-Published-orange.svg)](https://portswigger.net/bappstore/4da25d602db04f5ca7c4b668e4611cfe)
 [![Language](https://img.shields.io/badge/Lang-Java-blue.svg)](https://www.java.com)
 [![Language](https://img.shields.io/badge/Lang-.NET-blue.svg)](https://www.microsoft.com/net/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
