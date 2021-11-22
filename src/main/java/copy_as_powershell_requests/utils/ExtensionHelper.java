@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alexandre Teyar
+ * Copyright 2018 - 2021 Alexandre Teyar
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
 
 package copy_as_powershell_requests.utils;
 
-import burp.IBurpExtenderCallbacks;
-import burp.IHttpRequestResponse;
-import burp.IParameter;
-import burp.IRequestInfo;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+
+import burp.IBurpExtenderCallbacks;
+import burp.IHttpRequestResponse;
+import burp.IParameter;
+import burp.IRequestInfo;
 
 public class ExtensionHelper {
 
@@ -42,29 +44,23 @@ public class ExtensionHelper {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
   }
 
-  public StringBuilder buildPowershellRequest(
-      IHttpRequestResponse selectedMessage, boolean isBase64) {
-    IRequestInfo requestInfo = this.burpExtenderCallbacks.getHelpers()
-        .analyzeRequest(selectedMessage);
+  public StringBuilder buildPowershellRequest(IHttpRequestResponse selectedMessage, boolean isBase64) {
     StringBuilder stringBuilder = new StringBuilder();
-    String method = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-        .escape(requestInfo.getMethod()).toString();
-    String URI = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-        .escape(requestInfo.getUrl().toString()).toString();
+
+    IRequestInfo requestInfo = this.burpExtenderCallbacks.getHelpers().analyzeRequest(selectedMessage);
+    String method = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(requestInfo.getMethod()).toString();
+    String URI = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(requestInfo.getUrl().toString())
+        .toString();
 
     if (!(StaticData.SUPPORTED_METHODS.contains(method))) {
-      this.burpExtenderCallbacks.issueAlert(
-          "The \"" + StringUtils.abbreviate(method, 16)
-              + "\" method is not supported by PowerShell Invoke-WebRequest.");
+      this.burpExtenderCallbacks.issueAlert("The \"" + StringUtils.abbreviate(method, 16)
+          + "\" method is not supported by PowerShell Invoke-WebRequest.");
     }
 
-    stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::")
-        .append("\"").append(method).append("\"")
-        .append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI)
-        .append("\")")
+    stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::").append("\"").append(method)
+        .append("\"").append(System.lineSeparator()).append("$URI = [System.Uri]::new(\"").append(URI).append("\")")
         .append(System.lineSeparator()).append("$maximumRedirection = [System.Int32] ")
-        .append(StaticData.IWR_MAXIMUM_REDIRECTION)
-        .append(System.lineSeparator());
+        .append(StaticData.IWR_MAXIMUM_REDIRECTION).append(System.lineSeparator());
     stringBuilder.append(processHeaders(requestInfo.getHeaders()));
     stringBuilder.append(processParams(requestInfo.getParameters()));
     stringBuilder.append(processBody(selectedMessage, requestInfo, isBase64));
@@ -104,8 +100,8 @@ public class ExtensionHelper {
       }
     }
 
-    stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(")")
-        .append(System.lineSeparator()).append("$response");
+    stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(" ")).append(")").append(System.lineSeparator())
+        .append("$response");
 
     return stringBuilder;
   }
@@ -114,35 +110,31 @@ public class ExtensionHelper {
     this.hasContentType = false;
     this.hasUserAgent = false;
     StringBuilder stringBuilder = new StringBuilder(
-        "$headers = [System.Collections.Generic.Dictionary[string,string]]::new()")
-        .append(System.lineSeparator());
+        "$headers = [System.Collections.Generic.Dictionary[string,string]]::new()").append(System.lineSeparator());
 
     // skip the first header line
     for (String header : headers.subList(1, headers.size())) {
-      String headerName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-          .escape((header.split(": ")[0] + "")).toString();
-      String headerValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-          .escape((header.split(": ")[1] + "")).toString();
+      String headerName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape((header.split(": ")[0] + ""))
+          .toString();
+      String headerValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape((header.split(": ")[1] + ""))
+          .toString();
 
       if (!(StaticData.SKIP_HEADERS.contains(headerName.toLowerCase()))) {
         switch (header.split(": ")[0].toLowerCase()) {
-          case "content-type":
-            this.hasContentType = true;
-            stringBuilder.append("$contentType = [System.String]::new(\"").append(headerValue)
-                .append("\")")
-                .append(System.lineSeparator());
-            break;
-          case "user-agent":
-            this.hasUserAgent = true;
-            stringBuilder.append("$userAgent = [System.String]::new(\"").append(headerValue)
-                .append("\")")
-                .append(System.lineSeparator());
-            break;
-          default:
-            stringBuilder.append("$headers.Add(\"").append(headerName).append("\", \"")
-                .append(headerValue).append("\")")
-                .append(System.lineSeparator());
-            break;
+        case "content-type":
+          this.hasContentType = true;
+          stringBuilder.append("$contentType = [System.String]::new(\"").append(headerValue).append("\")")
+              .append(System.lineSeparator());
+          break;
+        case "user-agent":
+          this.hasUserAgent = true;
+          stringBuilder.append("$userAgent = [System.String]::new(\"").append(headerValue).append("\")")
+              .append(System.lineSeparator());
+          break;
+        default:
+          stringBuilder.append("$headers.Add(\"").append(headerName).append("\", \"").append(headerValue).append("\")")
+              .append(System.lineSeparator());
+          break;
         }
       }
     }
@@ -159,40 +151,36 @@ public class ExtensionHelper {
 
     if (!(parameters.isEmpty())) {
       for (IParameter parameter : parameters) {
-        String parameterName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-            .escape(parameter.getName()).toString();
-        String parameterValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
-            .escape(parameter.getValue()).toString();
+        String parameterName = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(parameter.getName())
+            .toString();
+        String parameterValue = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL).escape(parameter.getValue())
+            .toString();
 
         switch (parameter.getType()) {
-          case IParameter.PARAM_URL:
-            if (isURLFirstIteration) {
-              this.hasURIParams = true;
-              isURLFirstIteration = false;
-              stringBuilder.append(
-                  "$URIParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
-                  .append(System.lineSeparator());
-            }
-
-            stringBuilder.append("$URIParams.Add(\"").append(parameterName).append("\", \"")
-                .append(parameterValue).append("\")")
+        case IParameter.PARAM_URL:
+          if (isURLFirstIteration) {
+            this.hasURIParams = true;
+            isURLFirstIteration = false;
+            stringBuilder.append("$URIParams = [System.Collections.Generic.Dictionary[string,string]]::new()")
                 .append(System.lineSeparator());
-            break;
-          case IParameter.PARAM_COOKIE:
-            if (isCookieFirstIteration) {
-              this.hasCookieParams = true;
-              isCookieFirstIteration = false;
-              stringBuilder.append(
-                  "$webSession = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
-                  .append(System.lineSeparator());
-            }
+          }
 
-            stringBuilder.append("$webSession.Cookies.Add($URI, [System.Net.Cookie]::new(\"")
-                .append(parameterName).append("\", \"").append(parameterValue).append("\"))")
+          stringBuilder.append("$URIParams.Add(\"").append(parameterName).append("\", \"").append(parameterValue)
+              .append("\")").append(System.lineSeparator());
+          break;
+        case IParameter.PARAM_COOKIE:
+          if (isCookieFirstIteration) {
+            this.hasCookieParams = true;
+            isCookieFirstIteration = false;
+            stringBuilder.append("$webSession = [Microsoft.PowerShell.Commands.WebRequestSession]::new()")
                 .append(System.lineSeparator());
-            break;
-          default:
-            break;
+          }
+
+          stringBuilder.append("$webSession.Cookies.Add($URI, [System.Net.Cookie]::new(\"").append(parameterName)
+              .append("\", \"").append(parameterValue).append("\"))").append(System.lineSeparator());
+          break;
+        default:
+          break;
         }
       }
     }
@@ -200,8 +188,7 @@ public class ExtensionHelper {
     return stringBuilder;
   }
 
-  private StringBuilder processBody(IHttpRequestResponse selectedMessage,
-      IRequestInfo requestInfo, boolean isBase64) {
+  private StringBuilder processBody(IHttpRequestResponse selectedMessage, IRequestInfo requestInfo, boolean isBase64) {
     this.hasBody = false;
     this.isBase64 = false;
     this.isStandard = false;
@@ -216,15 +203,12 @@ public class ExtensionHelper {
       if (isBase64) {
         this.isBase64 = true;
         String body64 = Base64.getEncoder().encodeToString(data);
-        stringBuilder.append("$body64 = [System.String]::new(\"").append(body64)
-            .append("\")")
-            .append(System.lineSeparator()).append(
-            "$bytes = [System.Convert]::FromBase64String($body64)")
+        stringBuilder.append("$body64 = [System.String]::new(\"").append(body64).append("\")")
+            .append(System.lineSeparator()).append("$bytes = [System.Convert]::FromBase64String($body64)")
             .append(System.lineSeparator());
       } else {
         this.isStandard = true;
-        String body = StringEscapeUtils
-            .builder(StaticData.ESCAPE_POWERSHELL)
+        String body = StringEscapeUtils.builder(StaticData.ESCAPE_POWERSHELL)
             .escape(new String(data, StandardCharsets.ISO_8859_1)).toString();
         stringBuilder.append("$body = [System.String]::new(\"").append(body).append("\")")
             .append(System.lineSeparator());

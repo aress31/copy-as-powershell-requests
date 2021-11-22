@@ -16,24 +16,25 @@
 
 package burp;
 
-import static copy_as_powershell_requests.utils.StaticData.EXTENSION_NAME;
-
-import copy_as_powershell_requests.utils.ExtensionHelper;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
+import copy_as_powershell_requests.utils.ExtensionHelper;
+
 public class BurpExtender implements IBurpExtender {
+
+  public static final String EXTENSION = "Copy as PowerShell Requests";
 
   @Override
   public void registerExtenderCallbacks(IBurpExtenderCallbacks burpExtenderCallbacks) {
     Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     ExtensionHelper extensionHelper = new ExtensionHelper(burpExtenderCallbacks);
-    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(burpExtenderCallbacks,
-        extensionHelper,
+    ContextMenuFactory contextMenuFactory = new ContextMenuFactory(burpExtenderCallbacks, extensionHelper,
         systemClipboard);
-    burpExtenderCallbacks.setExtensionName(EXTENSION_NAME);
+
+    burpExtenderCallbacks.setExtensionName(EXTENSION);
+
     burpExtenderCallbacks.registerContextMenuFactory(contextMenuFactory);
-    burpExtenderCallbacks
-        .printOutput("New entries have been added to the Burp Suite context menu.");
+    burpExtenderCallbacks.printOutput("New 'Copy as PowerShell request(s)' option added to the context menu");
   }
 }

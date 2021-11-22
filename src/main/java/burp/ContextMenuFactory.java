@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alexandre Teyar
+ * Copyright 2018 - 2021 Alexandre Teyar
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 package burp;
 
-import copy_as_powershell_requests.utils.ExtensionHelper;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
+
 import javax.swing.JMenuItem;
+
+import copy_as_powershell_requests.utils.ExtensionHelper;
 
 public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
 
@@ -31,8 +34,7 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
   private Clipboard systemClipboard;
   private ExtensionHelper extensionHelper;
 
-  ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks,
-      ExtensionHelper extensionHelper,
+  ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks, ExtensionHelper extensionHelper,
       Clipboard systemClipboard) {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
     this.extensionHelper = extensionHelper;
@@ -43,44 +45,34 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
   public List<JMenuItem> createMenuItems(IContextMenuInvocation contextMenuInvocation) {
     List<JMenuItem> jMenuItems = new ArrayList<>();
     JMenuItem copyAsPowershellRequests = new JMenuItem("Copy as PowerShell request(s)");
-    copyAsPowershellRequests
-        .addActionListener(e -> copyAsPowershellRequests(contextMenuInvocation, false));
+    copyAsPowershellRequests.addActionListener(e -> copyAsPowershellRequests(contextMenuInvocation, false));
 
-    JMenuItem copyAsPowershellRequestsBase64 = new JMenuItem(
-        "Copy as PowerShell request(s) (base64-encoded body)");
-    copyAsPowershellRequestsBase64
-        .addActionListener(e -> copyAsPowershellRequests(contextMenuInvocation, true));
+    JMenuItem copyAsPowershellRequestsBase64 = new JMenuItem("Copy as PowerShell request(s) (base64-encoded body)");
+    copyAsPowershellRequestsBase64.addActionListener(e -> copyAsPowershellRequests(contextMenuInvocation, true));
 
     jMenuItems.add(copyAsPowershellRequests);
     jMenuItems.add(copyAsPowershellRequestsBase64);
+
     return jMenuItems;
   }
 
-  private void copyAsPowershellRequests(IContextMenuInvocation contextMenuInvocation,
-      boolean isBase64) {
-    StringBuilder stringBuilder = new StringBuilder();
+  private void copyAsPowershellRequests(IContextMenuInvocation contextMenuInvocation, boolean isBase64) {
+    StringJoiner stringJoiner = new StringJoiner("");
 
     for (IHttpRequestResponse selectedMessage : contextMenuInvocation.getSelectedMessages()) {
       if (selectedMessage.getRequest() != null) {
-        stringBuilder
-            .append(this.extensionHelper.buildPowershellRequest(selectedMessage, isBase64));
-        stringBuilder.append(System.lineSeparator()).append(System.lineSeparator());
+        stringJoiner.add(this.extensionHelper.buildPowershellRequest(selectedMessage, isBase64));
+        stringJoiner.add(System.lineSeparator()).add(System.lineSeparator());
       } else {
-        this.burpExtenderCallbacks.issueAlert(
-            "The selected request is null.");
+        this.burpExtenderCallbacks.issueAlert("The selected request is null.");
       }
     }
 
-    // delete the last line separator
-    if (stringBuilder.length() > 0) {
-      stringBuilder
-          .delete(stringBuilder.lastIndexOf(System.lineSeparator()), stringBuilder.length());
-    }
-
-    this.systemClipboard.setContents(new StringSelection(stringBuilder.toString()), this);
+    this.systemClipboard.setContents(new StringSelection(stringJoiner.toString()), this);
   }
 
   @Override
   public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    // Dummy comment
   }
 }
