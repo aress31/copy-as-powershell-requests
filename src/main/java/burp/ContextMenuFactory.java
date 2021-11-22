@@ -16,6 +16,7 @@
 
 package burp;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
@@ -34,11 +35,10 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
   private Clipboard systemClipboard;
   private ExtensionHelper extensionHelper;
 
-  ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks, ExtensionHelper extensionHelper,
-      Clipboard systemClipboard) {
+  ContextMenuFactory(IBurpExtenderCallbacks burpExtenderCallbacks) {
     this.burpExtenderCallbacks = burpExtenderCallbacks;
-    this.extensionHelper = extensionHelper;
-    this.systemClipboard = systemClipboard;
+    this.extensionHelper = new ExtensionHelper(burpExtenderCallbacks);
+    this.systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
   }
 
   @Override
@@ -61,8 +61,8 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
 
     for (IHttpRequestResponse selectedMessage : contextMenuInvocation.getSelectedMessages()) {
       if (selectedMessage.getRequest() != null) {
-        stringJoiner.add(this.extensionHelper.buildPowershellRequest(selectedMessage, isBase64));
-        stringJoiner.add(System.lineSeparator()).add(System.lineSeparator());
+        stringJoiner.add(this.extensionHelper.buildPowershellRequest(selectedMessage, isBase64))
+            .add(System.lineSeparator()).add(System.lineSeparator());
       } else {
         this.burpExtenderCallbacks.issueAlert("The selected request is null.");
         this.burpExtenderCallbacks.printError("The selected request is null.");
