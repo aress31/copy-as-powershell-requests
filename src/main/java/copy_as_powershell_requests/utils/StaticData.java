@@ -43,6 +43,7 @@ public class StaticData {
             put("#", "`#");
             put("\"", "`\"");
             put("'", "`'");
+            put("$", "`$");
           }
         }
   );

@@ -3,7 +3,7 @@ ExtensionType: 1
 Name: Copy as PowerShell Requests
 RepoName: copy-as-powershell-requests
 ScreenVersion: 1.0
-SerialVersion: 1
+SerialVersion: 2
 MinPlatformVersion: 0
 ProOnly: False
 Author: Alexandre Teyar, Aegis Cyber (www.aegiscyber.co.uk)
