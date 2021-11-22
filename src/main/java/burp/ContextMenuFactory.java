@@ -65,6 +65,7 @@ public class ContextMenuFactory implements IContextMenuFactory, ClipboardOwner {
         stringJoiner.add(System.lineSeparator()).add(System.lineSeparator());
       } else {
         this.burpExtenderCallbacks.issueAlert("The selected request is null.");
+        this.burpExtenderCallbacks.printError("The selected request is null.");
       }
     }
 

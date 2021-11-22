@@ -55,6 +55,8 @@ public class ExtensionHelper {
     if (!(StaticData.SUPPORTED_METHODS.contains(method))) {
       this.burpExtenderCallbacks.issueAlert("The \"" + StringUtils.abbreviate(method, 16)
           + "\" method is not supported by PowerShell Invoke-WebRequest.");
+      this.burpExtenderCallbacks.printError("The \"" + StringUtils.abbreviate(method, 16)
+          + "\" method is not supported by PowerShell Invoke-WebRequest.");
     }
 
     stringBuilder.append("$method = [Microsoft.PowerShell.Commands.WebRequestMethod]::").append("\"").append(method)
